@@ -17,8 +17,8 @@ local mainIni = inicfg.load(nil, directIni)
 local stateIni = inicfg.save(mainIni, directIni)
 
 update_state = false
-local script_vers = 1
-local script_vers_text = "1.0"
+local script_vers = 2
+local script_vers_text = "1.1"
 local update_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/update.ini"
 local update_path = getWorkingDirectory() .. "/update.ini"
 local script_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/TrainBot.lua"
@@ -91,18 +91,18 @@ function main()
             end)
             break
         end
-        -- if AutoUpd.v then
-        --     downloadUrlToFile(update_url, update_path, function(id, status)
-        --         if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-        --             updateIni = inicfg.load(nil, update_path)
-        --             if tonumber(updateIni.info.vers) > script_vers then
-        --                 sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
-        --                 update_state = true
-        --             end
-        --             os.remove(update_path)
-        --         end
-        --     end)
-        -- end
+        if AutoUpd.v then
+            downloadUrlToFile(update_url, update_path, function(id, status)
+                if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+                    updateIni = inicfg.load(nil, update_path)
+                    if tonumber(updateIni.info.vers) > script_vers then
+                        sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
+                        update_state = true
+                    end
+                    os.remove(update_path)
+                end
+            end)
+        end
     end
 end
 
