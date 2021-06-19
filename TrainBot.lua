@@ -17,8 +17,8 @@ local mainIni = inicfg.load(nil, directIni)
 local stateIni = inicfg.save(mainIni, directIni)
 
 update_state = false
-local script_vers = 1
-local script_vers_text = "1.1"
+local script_vers = 2
+local script_vers_text = "1.2"
 local update_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/update.ini"
 local update_path = getWorkingDirectory() .. "/update.ini"
 local script_url = "https://github.com/ik0nka/TrainBot/blob/master/TrainBot.lua?raw=true"
