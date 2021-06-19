@@ -21,7 +21,7 @@ local script_vers = 1
 local script_vers_text = "1.1"
 local update_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/update.ini"
 local update_path = getWorkingDirectory() .. "/update.ini"
-local script_url = ""
+local script_url = "https://github.com/ik0nka/TrainBot/blob/9320fbcc6d51804ae29523ffa96c59fb40735278/TrainBot.lua"
 local script_path = thisScript().path
 
 local window = imgui.ImBool(false)
@@ -39,7 +39,7 @@ local menu = 0
 function main()
     while not isSampAvailable() do wait(200) end
     imgui.Process = false
-    sampAddChatMessage('{FFFFFF}[{E06666}TrainBot{FFFFFF}] Успешно загружен', -1)
+    sampAddChatMessage('{FFFFFF}[{E06666}TrainBot{FFFFFF}] Бот успешно загружен', -1)
     sampAddChatMessage('{FFFFFF}[{E06666}TrainBot{FFFFFF}] Авторы: {FFFF00}ik0nka,{FFAD40} Gruzin Gang', -1)
     sampRegisterChatCommand('train', function()
         window.v = not window.v
@@ -85,7 +85,7 @@ function main()
         if update_state then
             downloadUrlToFile(script_url, script_path, function(id, status)
                 if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-                    sampAddChatMessage("Скрипт успешно обновлен!", -1)
+                    sampAddChatMessage("Обновление прошло успешно!", -1)
                     thisScript():reload()
                 end
             end)
@@ -103,7 +103,7 @@ function imgui.OnDrawFrame()
         imgui.SetNextWindowSize(imgui.ImVec2(360.0, 200.0), imgui.Cond.FirstUseEver)
 
         imgui.Begin('Train Bot', window)
-        if imgui.Button(u8'Для бота', imgui.ImVec2(100, 0)) then 
+        if imgui.Button(u8'Бот', imgui.ImVec2(100, 0)) then 
             menu = 0
         end
         imgui.SameLine(0, 15)
@@ -139,7 +139,7 @@ function imgui.OnDrawFrame()
                         if status == dlstatus.STATUS_ENDDOWNLOADDATA then
                             updateIni = inicfg.load(nil, update_path)
                             if tonumber(updateIni.info.vers) > script_vers then
-                                sampAddChatMessage("Есть обновление! Версия: " .. updateIni.info.vers_text, -1)
+                                sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
                                 update_state = true
                             end
                             os.remove(update_path)
@@ -156,7 +156,7 @@ function imgui.OnDrawFrame()
     end
     if window_stats.v == true then
         imgui.Begin('Stats', window_stats)
-        imgui.Text(u8'Скоро')
+        imgui.Text(u8'разработка')
 
         imgui.End()
     end
