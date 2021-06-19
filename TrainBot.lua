@@ -21,7 +21,7 @@ local script_vers = 1
 local script_vers_text = "1.1"
 local update_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/update.ini"
 local update_path = getWorkingDirectory() .. "/update.ini"
-local script_url = "https://github.com/ik0nka/TrainBot/blob/9320fbcc6d51804ae29523ffa96c59fb40735278/TrainBot.lua"
+local script_url = "https://github.com/ik0nka/TrainBot/blob/master/TrainBot.lua?raw=true"
 local script_path = thisScript().path
 
 local window = imgui.ImBool(false)
@@ -134,12 +134,12 @@ function imgui.OnDrawFrame()
                         sampAddChatMessage('on', -1)
                     end  
                 end
-                if AutoUpd.v then
+                if AutoUpd.v then 
                     downloadUrlToFile(update_url, update_path, function(id, status)
                         if status == dlstatus.STATUS_ENDDOWNLOADDATA then
                             updateIni = inicfg.load(nil, update_path)
                             if tonumber(updateIni.info.vers) > script_vers then
-                                sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
+                                sampAddChatMessage("Есть обновление! Версия: " .. updateIni.info.vers_text, -1)
                                 update_state = true
                             end
                             os.remove(update_path)
