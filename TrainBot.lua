@@ -1,5 +1,5 @@
 script_name('Train bot for Arizona-RP')
-script_version("1.0")
+script_version("1.1")
 script_author("ik0nka and Gruzin Gang")
 
 require "lib.moonloader"
@@ -7,14 +7,9 @@ local imgui = require 'imgui'
 local encoding = require 'encoding'
 local samp = require 'lib.samp.events'
 local memory = require 'memory'
-local inicfg = require 'inicfg'
 local dlstatus = require('moonloader').download_status
 encoding.default = 'CP1251'
 u8 = encoding.UTF8
-
-local directIni = 'moonloader\\config\\TrainBot.ini'
-local mainIni = inicfg.load(nil, directIni)
-local stateIni = inicfg.save(mainIni, directIni)
 
 update_state = false
 local script_vers = 2
@@ -31,7 +26,6 @@ local TrainBot = imgui.ImBool(false)
 local AutoRes = imgui.ImBool(false)
 local Statistik = imgui.ImBool(false)
 local AntiAfk = imgui.ImBool(false)
-local AutoUpd = imgui.ImBool(mainIni.config.AutoUpdate)
 
 
 local menu = 0
@@ -91,18 +85,6 @@ function main()
             end)
             break
         end
-        if AutoUpd.v then
-            downloadUrlToFile(update_url, update_path, function(id, status)
-                if status == dlstatus.STATUS_ENDDOWNLOADDATA then
-                    updateIni = inicfg.load(nil, update_path)
-                    if tonumber(updateIni.info.vers) > script_vers then
-                        sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
-                        update_state = true
-                    end
-                    os.remove(update_path)
-                end
-            end)
-        end
     end
 end
 
@@ -134,22 +116,22 @@ function imgui.OnDrawFrame()
             imgui.Checkbox(u8'Статистика', Statistik)
         elseif menu == 1 then
             imgui.Checkbox(u8'Анти-Афк', AntiAfk)
-            if imgui.Checkbox(u8'Авто обновление', AutoUpd) then
-                if mainIni.config.AutoUpdate == true then
-                    mainIni.config.AutoUpdate = false
-                    if inicfg.save(mainIni, directIni) then
-                        sampAddChatMessage('off', -1)
-                    end  
-                elseif mainIni.config.AutoUpdate == false then 
-                    mainIni.config.AutoUpdate = true
-                    if inicfg.save(mainIni, directIni) then
-                        sampAddChatMessage('on', -1)
-                    end  
-                end
-            end
         elseif menu == 2 then
             imgui.Text(u8'Авторы: ik0nka, Gruzin Gang')
             imgui.Text(u8'Версия скрипта: 1.1')
+            imgui.SameLine(0, 15)
+            if imgui.Button(u8'Проверить обновление', imgui.ImVec2(145, 20)) then
+                downloadUrlToFile(update_url, update_path, function(id, status)
+                    if status == dlstatus.STATUS_ENDDOWNLOADDATA then
+                        updateIni = inicfg.load(nil, update_path)
+                        if tonumber(updateIni.info.vers) > script_vers then
+                            sampAddChatMessage("Вышла новая версия! Номер версии: " .. updateIni.info.vers_text, -1)
+                            update_state = true
+                        end
+                        os.remove(update_path)
+                    end
+                end)
+            end
         end
 
         imgui.End()
