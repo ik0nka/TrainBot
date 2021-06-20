@@ -8,6 +8,7 @@ local encoding = require 'encoding'
 local samp = require 'lib.samp.events'
 local memory = require 'memory'
 local dlstatus = require('moonloader').download_status
+local inicfg = require 'inicfg'
 encoding.default = 'CP1251'
 u8 = encoding.UTF8
 
@@ -119,8 +120,7 @@ function imgui.OnDrawFrame()
         elseif menu == 2 then
             imgui.Text(u8'Авторы: ik0nka, Gruzin Gang')
             imgui.Text(u8'Версия скрипта: 1.1')
-            imgui.SameLine(0, 15)
-            if imgui.Button(u8'Проверить обновление', imgui.ImVec2(145, 20)) then
+            if imgui.Button(u8'Проверить обновление', imgui.ImVec2(145, 23)) then
                 downloadUrlToFile(update_url, update_path, function(id, status)
                     if status == dlstatus.STATUS_ENDDOWNLOADDATA then
                         updateIni = inicfg.load(nil, update_path)
