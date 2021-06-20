@@ -1,5 +1,5 @@
 script_name('Train bot for Arizona-RP')
-script_version("1.1")
+script_version("1.2")
 script_author("ik0nka and Gruzin Gang")
 
 require "lib.moonloader"
@@ -13,8 +13,8 @@ encoding.default = 'CP1251'
 u8 = encoding.UTF8
 
 update_state = false
-local script_vers = 2
-local script_vers_text = "1.1"
+local script_vers = 3
+local script_vers_text = "1.2"
 local update_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/update.ini"
 local update_path = getWorkingDirectory() .. "/update.ini"
 local script_url = "https://raw.githubusercontent.com/ik0nka/TrainBot/main/TrainBot.lua"
@@ -27,7 +27,6 @@ local TrainBot = imgui.ImBool(false)
 local AutoRes = imgui.ImBool(false)
 local Statistik = imgui.ImBool(false)
 local AntiAfk = imgui.ImBool(false)
-
 
 local menu = 0
 
@@ -45,6 +44,8 @@ function main()
         if TrainBot.v and isCharInAnyTrain(PLAYER_PED) then
             local x, y, z = getCharCoordinates(PLAYER_PED) 
             local BoostTrain = storeCarCharIsInNoSave(PLAYER_PED)
+            local SetSpeed = SliderSpeed
+            sampAddChatMessage(SetS)
             if getDistanceBetweenCoords3d(x, y, z, chkx, chky, chkz) < 3 and isCharInAnyTrain(PLAYER_PED) then
                 setTrainSpeed(BoostTrain, 0)
             elseif getDistanceBetweenCoords3d(x, y, z, chkx, chky, chkz) > 10 and isCharInAnyTrain(PLAYER_PED) then
@@ -90,14 +91,11 @@ function main()
 end
 
 function imgui.OnDrawFrame()
-    if not window.v and not window_stats.v then 
-        imgui.Process = false
-    end
     if window.v then
         imgui.SetNextWindowPos(imgui.ImVec2(350.0, 250.0), imgui.Cond.FirstUseEver)
         imgui.SetNextWindowSize(imgui.ImVec2(360.0, 200.0), imgui.Cond.FirstUseEver)
 
-        imgui.Begin('Train Bot', window)
+        imgui.Begin('Train Bot', window, imgui.WindowFlags.NoResize)
         if imgui.Button(u8'Бот', imgui.ImVec2(100, 0)) then 
             menu = 0
         end
@@ -112,14 +110,16 @@ function imgui.OnDrawFrame()
 
         imgui.Spacing() imgui.Separator() imgui.Spacing()
         if menu == 0 then
-            imgui.Checkbox(u8'Бот', TrainBot)
+            imgui.Checkbox(u8'Включить', TrainBot)
             imgui.Checkbox(u8'Авто взятие рейса', AutoRes) 
-            imgui.Checkbox(u8'Статистика', Statistik)
+            if imgui.Checkbox(u8'Статистика', Statistik) then
+                window_stats.v = not window_stats.v
+            end
         elseif menu == 1 then
             imgui.Checkbox(u8'Анти-Афк', AntiAfk)
         elseif menu == 2 then
             imgui.Text(u8'Авторы: ik0nka, Gruzin Gang')
-            imgui.Text(u8'Версия скрипта: 1.1')
+            imgui.Text(u8'Версия скрипта: 1.2')
             if imgui.Button(u8'Проверить обновление', imgui.ImVec2(145, 23)) then
                 downloadUrlToFile(update_url, update_path, function(id, status)
                     if status == dlstatus.STATUS_ENDDOWNLOADDATA then
@@ -133,12 +133,6 @@ function imgui.OnDrawFrame()
                 end)
             end
         end
-
-        imgui.End()
-    end
-    if window_stats.v == true then
-        imgui.Begin('Stats', window_stats)
-        imgui.Text(u8'разработка')
 
         imgui.End()
     end
